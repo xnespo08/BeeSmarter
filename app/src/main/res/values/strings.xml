@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BeeSmarter</string>
+    <string name="start">Start</string>
+    <string name="image">Image</string>
+    <string name="add_hive_area">Add Hive Area</string>
+    <string name="area">Area</string>
+    <string name="hives_number">Hives Number</string>
+</resources>
