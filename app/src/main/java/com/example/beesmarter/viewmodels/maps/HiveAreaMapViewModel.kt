@@ -10,4 +10,12 @@ class HiveAreaMapViewModel(application: Application) : BaseHiveAreaViewModel(app
     fun getAll(): LiveData<MutableList<HiveArea>> {
         return hiveAreasRepository.getAll()
     }
+
+    suspend fun findById(id: Long): HiveArea {
+        return hiveAreasRepository.findById(id)
+    }
+
+    suspend fun update(hiveArea: HiveArea) {
+        hiveAreasRepository.update(hiveArea)
+    }
 }

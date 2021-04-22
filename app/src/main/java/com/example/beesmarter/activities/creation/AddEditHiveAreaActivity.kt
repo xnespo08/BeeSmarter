@@ -3,6 +3,7 @@ package com.example.beesmarter.activities.creation
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -37,16 +39,17 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-//onmapreadycallback
 class AddEditHiveAreaActivity : BaseMVVMActivity<AddEditHiveAreaViewModel>(AddEditHiveAreaViewModel::class.java),
         CoroutineScope {
     companion object {
-        fun createIntent(context: Context, id: Long?, area: String, hivesCount: Int): Intent {
+        fun createIntent(context: Context, id: Long?, area: String, hivesCount: Int, latitude: Double, longitude: Double): Intent {
             val intent = Intent(context, AddEditHiveAreaActivity::class.java)
             id?.let {
                 intent.putExtra(IntentConstants.ID, id)
                 intent.putExtra(IntentConstants.AREA, area)
                 intent.putExtra(IntentConstants.HIVES_COUNT, hivesCount)
+                intent.putExtra(IntentConstants.LATITUDE, latitude)
+                intent.putExtra(IntentConstants.LONGITUDE, longitude)
             }
 
             return intent
@@ -58,8 +61,6 @@ class AddEditHiveAreaActivity : BaseMVVMActivity<AddEditHiveAreaViewModel>(AddEd
 
     private var id: Long? = null
     private lateinit var hiveArea: HiveArea
-    private var lat: Double = 0.0
-    private var lng: Double = 0.0
     private var areaPlace: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,36 +79,6 @@ class AddEditHiveAreaActivity : BaseMVVMActivity<AddEditHiveAreaViewModel>(AddEd
             areaPlace = intent.getStringExtra(IntentConstants.AREA)
         }
 
-        if (id == null) {
-            val manager: FragmentManager = supportFragmentManager
-            val ft: FragmentTransaction = manager.beginTransaction()
-            val fragment: Fragment? = manager.findFragmentById(R.id.map)
-            if (fragment != null) {
-                ft.hide(fragment)
-            }
-            ft.commit()
-        }
-
-//        if (areaPlace != null) {
-//            val coder = Geocoder(this)
-//            var address: MutableList<Address> = mutableListOf()
-//
-//            Places.initialize(getApplicationContext(), "IzaSyCd1rwr2BIqVN9OgQ5CfnQ-XIndicA8v_4");
-//            try {
-//                address = coder.getFromLocationName(areaPlace, 5)
-//                if (address != null) {
-//                    val location: Address = address[0];
-//                    lat = location.latitude
-//                    lng = location.longitude
-//                }
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            }
-//        }
-//
-//        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-//        mapFragment?.getMapAsync(this)
-
         id?.let {
             launch {
                 hiveArea = viewModel.findById(it)
@@ -117,35 +88,12 @@ class AddEditHiveAreaActivity : BaseMVVMActivity<AddEditHiveAreaViewModel>(AddEd
                 }
             }
         }?:kotlin.run {
-            hiveArea = HiveArea("", 0)
+            hiveArea = HiveArea("", 0, 50.0755, 14.4378)
         }
 
+        supportActionBar?.hide()
         setInteractionListeners()
     }
-
-//    override fun onMapReady(p0: GoogleMap?) {
-//        p0?.apply {
-//            val area = LatLng(lat, lng)
-//            addMarker(
-//                    MarkerOptions()
-//                            .position(area)
-//                            .title("Marker in $area")
-//            )
-//            animateCamera(CameraUpdateFactory.newLatLngZoom(area, 15f))
-//        }
-//    }
-
-//    override fun onMapClick(p0: LatLng?) {
-//        Toast.makeText(this, "Map is clicked", Toast.LENGTH_LONG).show()
-//        //        val markerOptions: MarkerOptions? = null
-////        if (p1 != null && markerOptions != null) {
-////            markerOptions.position(p1)
-////            markerOptions.title("$p1.latitude  : $p1.longitude")
-////            p0.clear()
-////            p0.animateCamera(CameraUpdateFactory.newLatLngZoom(p1, 15f))
-////            p0.addMarker(markerOptions)
-////        }
-//    }
 
     private fun setInteractionListeners() {
         val etHiveArea = findViewById<EditText>(R.id.et_area)

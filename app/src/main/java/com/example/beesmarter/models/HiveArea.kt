@@ -13,7 +13,13 @@ data class HiveArea(
     var area: String,
 
     @ColumnInfo(name = "hives_count")
-    var hives_count: Int,)
+    var hives_count: Int,
+
+    @ColumnInfo(name = "latitude")
+    var latitude: Double,
+
+    @ColumnInfo(name = "longitude")
+    var longitude: Double,)
 {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

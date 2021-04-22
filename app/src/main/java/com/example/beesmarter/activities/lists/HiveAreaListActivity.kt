@@ -2,11 +2,14 @@ package com.example.beesmarter.activities.lists
 
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
@@ -21,8 +24,18 @@ import com.example.beesmarter.utils.HiveAreaDiffCallback
 import com.example.beesmarter.viewmodels.list_models.HiveAreaListViewModel
 import com.example.mvvmlibrary.BaseMVVMActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import okhttp3.*
+import org.json.JSONArray
+import java.io.IOException
+import java.lang.Exception
+import java.net.HttpURLConnection
+import java.net.URL
 
 class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaListViewModel::class.java), CoroutineScope {
     companion object {
@@ -45,13 +58,12 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
     private lateinit var hiveAreaAdapter: HiveAreaAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val fabAddHiveArea = findViewById<FloatingActionButton>(R.id.fab_add_hive_area)
         fabAddHiveArea.setOnClickListener {
-            startActivity(AddEditHiveAreaActivity.createIntent(this, null, "", 0))
+            startActivity(AddEditHiveAreaActivity.createIntent(this, null, "", 0, 50.075514,14.4378))
         }
 
         hiveAreaAdapter = HiveAreaAdapter()
@@ -66,9 +78,7 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
             Observer { t ->
                 t?.let {hiveAreaAdapter.updateList(it)}
             })
-
     }
-
 
     inner class HiveAreaAdapter : RecyclerView.Adapter<HiveAreaAdapter.HiveAreaViewHolder>() {
 
@@ -81,10 +91,74 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
 
         override fun getItemCount(): Int = hiveAreaList.size
 
+//        fun fetchJson(hiveArea: String) {
+//            println("Attempting to Fetch JSON")
+//            val url = "https://api.openweathermap.org/data/2.5/weather?q=$hiveArea&units=metric&appid=0012c8270d67a45d7ac1d0912b539316"
+//            val request = Request.Builder().url(url).build()
+//            val client = OkHttpClient()
+//            client.newCall(request).enqueue(object: Callback {
+//                override fun onFailure(call: Call, e: IOException) {
+//                    println("Failed to execute request")
+//                }
+//
+//                override fun onResponse(call: Call, response: Response) {
+//                    val body = response.body?.string()
+//
+//                    println(body)
+//
+//                    val gson = GsonBuilder().create()
+//                    val weatherData = gson.fromJson(body, WeatherData::class.java)
+//                    temp = weatherData.main.temp
+//                    lon = weatherData.coord.lon
+//                    lat = weatherData.coord.lat
+//                }
+//            })
+//        }
+//
+//        inner class WeatherData(val coord: Coord, val weather: List<Weather>, val base: String, val main: TemperatureData,
+//                                val visibility: Int, val wind: Wind, val clouds: Clouds, val dt: Int, val sys: Sys, val id: Int, val name: String,
+//                                val cod: Int)
+//
+//        inner class Sys(
+//            @SerializedName("type") val type: Int,
+//            @SerializedName("id") val id: Int,
+//            @SerializedName("message") val message: Double,
+//            @SerializedName("country") val country: String,
+//            @SerializedName("sunrise") val sunrise: Int,
+//            @SerializedName("sunset") val sunset: Int
+//        )
+//
+//        inner class Coord(val lon: Double, val lat: Double)
+//
+//        inner class TemperatureData(
+//            @SerializedName("temp") val temp: Double,
+//            @SerializedName("pressure") val pressure: Int,
+//            @SerializedName("humidity") val humidity: Int,
+//            @SerializedName("temp_min") val tempMin: Double,
+//            @SerializedName("temp_max") val tempMax: Double
+//        )
+//
+//        inner class Weather(
+//            @SerializedName("id") val id: Int,
+//            @SerializedName("main") val main: String,
+//            @SerializedName("description") val description: String,
+//            @SerializedName("icon") val icon: String
+//        )
+//
+//        inner class Clouds(
+//            @SerializedName("all") val all: Int
+//        )
+//
+//        inner class Wind(
+//            @SerializedName("speed") val speed: Double,
+//            @SerializedName("deg") val deg: Int
+//        )
+
         override fun onBindViewHolder(holder: HiveAreaAdapter.HiveAreaViewHolder, position: Int) {
             val hiveArea = hiveAreaList[position]
             holder.areaName.text = hiveArea.area
             holder.hiveNumber.text = hiveArea.hives_count.toString()
+
             holder.deleteButton.setOnClickListener {
                 launch {
                     val delHiveArea = viewModel.findById(hiveAreaList[holder.adapterPosition].id!!)
@@ -97,6 +171,8 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
                                 this@HiveAreaListActivity,
                                 hiveAreaList[holder.adapterPosition].id!!,
                                 hiveAreaList[holder.adapterPosition].area,
+                                hiveAreaList[holder.adapterPosition].latitude,
+                                hiveAreaList[holder.adapterPosition].longitude
                         )
                 )
             }
@@ -106,7 +182,9 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
                         this@HiveAreaListActivity,
                         hiveAreaList[holder.adapterPosition].id!!,
                         hiveAreaList[holder.adapterPosition].area,
-                        hiveAreaList[holder.adapterPosition].hives_count
+                        hiveAreaList[holder.adapterPosition].hives_count,
+                        hiveAreaList[holder.adapterPosition].latitude,
+                        hiveAreaList[holder.adapterPosition].longitude
                     )
                 )
             }
@@ -126,6 +204,7 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
             val hiveNumber: TextView = view.findViewById(R.id.tv_hive_area_number)
             val deleteButton: ImageView = view.findViewById(R.id.iv_delete_hive_area)
             val showMap: ImageView = view.findViewById(R.id.iv_show_map)
+            val weather: TextView = view.findViewById(R.id.tv_weather)
         }
     }
 }
