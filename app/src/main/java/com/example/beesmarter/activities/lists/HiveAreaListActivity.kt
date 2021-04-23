@@ -2,14 +2,11 @@ package com.example.beesmarter.activities.lists
 
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.beesmarter.IntentConstants
 import com.example.beesmarter.R
+import com.example.beesmarter.activities.creation.AddEditHiveActivity
 import com.example.beesmarter.activities.creation.AddEditHiveAreaActivity
 import com.example.beesmarter.activities.maps.HiveAreaMapActivity
 import com.example.beesmarter.models.HiveArea
@@ -24,18 +22,8 @@ import com.example.beesmarter.utils.HiveAreaDiffCallback
 import com.example.beesmarter.viewmodels.list_models.HiveAreaListViewModel
 import com.example.mvvmlibrary.BaseMVVMActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
-import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import okhttp3.*
-import org.json.JSONArray
-import java.io.IOException
-import java.lang.Exception
-import java.net.HttpURLConnection
-import java.net.URL
 
 class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaListViewModel::class.java), CoroutineScope {
     companion object {
@@ -161,7 +149,7 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
 
             holder.deleteButton.setOnClickListener {
                 launch {
-                    val delHiveArea = viewModel.findById(hiveAreaList[holder.adapterPosition].id!!)
+                    val delHiveArea = viewModel.findById(hiveAreaList[holder.adapterPosition].id)
                     viewModel.delete(delHiveArea)
                 }
             }
@@ -169,8 +157,20 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
                 startActivity(
                         HiveAreaMapActivity.createIntent(
                                 this@HiveAreaListActivity,
-                                hiveAreaList[holder.adapterPosition].id!!,
+                                hiveAreaList[holder.adapterPosition].id,
                                 hiveAreaList[holder.adapterPosition].area,
+                                hiveAreaList[holder.adapterPosition].latitude,
+                                hiveAreaList[holder.adapterPosition].longitude
+                        )
+                )
+            }
+            holder.editHiveArea.setOnClickListener {
+                startActivity(
+                        AddEditHiveAreaActivity.createIntent(
+                                this@HiveAreaListActivity,
+                                hiveAreaList[holder.adapterPosition].id,
+                                hiveAreaList[holder.adapterPosition].area,
+                                hiveAreaList[holder.adapterPosition].hives_count,
                                 hiveAreaList[holder.adapterPosition].latitude,
                                 hiveAreaList[holder.adapterPosition].longitude
                         )
@@ -178,14 +178,11 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
             }
             holder.itemView.setOnClickListener {
                 startActivity(
-                    AddEditHiveAreaActivity.createIntent(
-                        this@HiveAreaListActivity,
-                        hiveAreaList[holder.adapterPosition].id!!,
-                        hiveAreaList[holder.adapterPosition].area,
-                        hiveAreaList[holder.adapterPosition].hives_count,
-                        hiveAreaList[holder.adapterPosition].latitude,
-                        hiveAreaList[holder.adapterPosition].longitude
-                    )
+                        HiveListActivity.createIntent(
+                                this@HiveAreaListActivity,
+                                hiveAreaList[holder.adapterPosition].id,
+                                hiveAreaList[holder.adapterPosition].area
+                        )
                 )
             }
         }
@@ -200,11 +197,11 @@ class HiveAreaListActivity : BaseMVVMActivity<HiveAreaListViewModel>(HiveAreaLis
         }
 
         inner class HiveAreaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val areaName: TextView = view.findViewById(R.id.tv_hive_area_name)
+            val areaName: TextView = view.findViewById(R.id.tv_hive_order_name)
             val hiveNumber: TextView = view.findViewById(R.id.tv_hive_area_number)
-            val deleteButton: ImageView = view.findViewById(R.id.iv_delete_hive_area)
+            val deleteButton: ImageView = view.findViewById(R.id.iv_delete_hive)
             val showMap: ImageView = view.findViewById(R.id.iv_show_map)
-            val weather: TextView = view.findViewById(R.id.tv_weather)
+            val editHiveArea: ImageView = view.findViewById(R.id.iv_edit_hive_area)
         }
     }
 }

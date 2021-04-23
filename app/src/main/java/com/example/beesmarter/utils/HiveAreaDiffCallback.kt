@@ -20,6 +20,9 @@ class HiveAreaDiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldHiveAreas[oldItemPosition].area == newHiveAreas[newItemPosition].area
+        val areas = oldHiveAreas[oldItemPosition].area == newHiveAreas[newItemPosition].area
+        val hiveCount = oldHiveAreas[oldItemPosition].hives_count == newHiveAreas[newItemPosition].hives_count
+
+        return areas && hiveCount
     }
 }

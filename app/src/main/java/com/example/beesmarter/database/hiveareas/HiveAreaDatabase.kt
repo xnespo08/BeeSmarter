@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 import com.example.beesmarter.models.HiveArea
 
 @Database(entities = [HiveArea::class],
-    version = 3,
+    version = 4,
     exportSchema = false)
 abstract class HiveAreaDatabase : RoomDatabase() {
 

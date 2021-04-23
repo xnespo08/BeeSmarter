@@ -28,6 +28,8 @@
         <activity android:name=".activities.lists.HiveAreaListActivity" />
         <activity android:name=".activities.creation.AddEditHiveAreaActivity" />
         <activity android:name=".activities.maps.HiveAreaMapActivity"/>
+        <activity android:name=".activities.lists.HiveListActivity"/>
+        <activity android:name=".activities.creation.AddEditHiveActivity"/>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

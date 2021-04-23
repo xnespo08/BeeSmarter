@@ -17,21 +17,10 @@
             android:id="@+id/tv_hive_order_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/area"
+            android:text="@string/order"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_hive_area_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/hives_number"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_edit_hive_area"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -42,26 +31,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_delete" />
-
-        <ImageView
-            android:id="@+id/iv_show_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_delete_hive"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_dialog_map" />
-
-        <ImageView
-            android:id="@+id/iv_edit_hive_area"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_show_map"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_dialog_info" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

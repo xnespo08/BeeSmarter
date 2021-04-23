@@ -7,6 +7,6 @@ import com.example.beesmarter.database.hiveareas.IHiveAreasLocalRepository
 import com.example.beesmarter.database.hives.HiveLocalRepositoryImpl
 import com.example.beesmarter.database.hives.IHiveLocalRepository
 
-abstract class BaseHiveAreaViewModel(application: Application) : AndroidViewModel(application) {
-    protected var hiveAreasRepository: IHiveAreasLocalRepository = HiveAreasLocalRepositoryImpl(application)
+abstract class BaseHiveViewModel(application: Application) : AndroidViewModel(application) {
+    protected var hiveRepository: IHiveLocalRepository = HiveLocalRepositoryImpl(application)
 }

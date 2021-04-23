@@ -94,7 +94,7 @@ class HiveAreaMapActivity: BaseMVVMActivity<HiveAreaMapViewModel>(HiveAreaMapVie
             fetchJson(area).observe(this, Observer {
                 val tvMapArea = findViewById<TextView>(R.id.tv_map_area)
                 if (it != null) {
-                    tvMapArea.text = it.toString()
+                    tvMapArea.text = "$it°C"
                 }
             })
 //            val tvMapArea = findViewById<TextView>(R.id.tv_map_area)

@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="374dp"
-        android:layout_height="615dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_map"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_map_area"
         tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
 
     <Button
         android:id="@+id/btn_add_map"
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:text="Button"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:text="@string/add_hive_area"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -28,12 +28,9 @@
         android:id="@+id/tv_map_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/map"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.12"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

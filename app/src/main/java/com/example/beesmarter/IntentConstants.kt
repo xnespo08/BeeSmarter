@@ -6,4 +6,5 @@ object IntentConstants {
     const val HIVES_COUNT = "hives_count"
     const val LATITUDE = "latitude"
     const val LONGITUDE = "longitude"
+    const val ORDER_NAME = "order_name"
 }

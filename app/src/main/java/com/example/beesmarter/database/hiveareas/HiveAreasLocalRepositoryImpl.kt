@@ -28,5 +28,4 @@ class HiveAreasLocalRepositoryImpl(context: Context) : IHiveAreasLocalRepository
     override suspend fun delete(hiveArea: HiveArea) {
         hiveAreasDao.delete(hiveArea)
     }
-
 }
